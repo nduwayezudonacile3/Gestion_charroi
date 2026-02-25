@@ -90,8 +90,8 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
+         'passwords' => [
+          'users' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
