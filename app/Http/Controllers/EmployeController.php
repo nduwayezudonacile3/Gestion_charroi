@@ -59,9 +59,15 @@ class EmployeController extends Controller
     }
 
     // Supprimer un employé
-    public function destroy(Employe $employe)
+     public function destroy(Employe $employe)
     {
+        if(auth()->user()->role !== 'admin') {
+            abort(403, 'Action non autorisée');
+        }
+
         $employe->delete();
         return redirect()->route('employes.liste')->with('success', 'Employé supprimé !');
     }
 }
+
+ 
