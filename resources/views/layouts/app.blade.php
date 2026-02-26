@@ -77,7 +77,10 @@
             <span class="fs-4 fw-semibold text-white">GESTION CHARROI</span>
         </div>
         <nav class="nav nav-pills flex-column mb-auto">
-            <a href="#" class="nav-link active" aria-current="page">
+            <a href="{{route('dashboard')}}" class="nav-link active" aria-current="page">
+                <i class="bi bi-speedometer2 fs-5"></i> Dashboard
+            </a>
+             <a href="{{ route('vehicules.index') }} " class="nav-link" aria-current="page">
                 <i class="bi bi-people-fill fs-5"></i> Employés
             </a>
             <a href="#" class="nav-link">
@@ -172,7 +175,7 @@
                 </header>
             @endif
 
-            {{ $slot }}
+            @yield('content')
         </main>
     </div>
 </div>

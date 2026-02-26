@@ -17,6 +17,7 @@ return new class extends Migration
         $table->string('nom_projet');
         $table->string('delais_projet');
         $table->double('budget');
+         $table->double('statut')->nullable();
         $table->text('description')->nullable();
         $table->foreignId('user_id')
               ->constrained('users')

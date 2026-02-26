@@ -3,64 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicule;
-use App\Http\Requests\StoreVehiculeRequest;
-use App\Http\Requests\UpdateVehiculeRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VehiculeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $vehicules = Vehicule::all();
+        return view('vehicules.index', compact('vehicules'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('vehicules.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreVehiculeRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'immatriculation' => 'required|string|max:255',
+            'categorie' => 'required|string|max:255',
+            'marque' => 'required|string|max:255',
+            'status' => 'required|in:disponible,indisponible,au service,maintenance',
+            'description' => 'nullable|string',
+            'annee_fabrication' => 'required|string|max:4'
+        ]);
+        $data['user_id'] = Auth::id();
+
+        Vehicule::create($data);
+
+        return redirect()->route('vehicules.index')->with('success', 'Véhicule ajouté avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Vehicule $vehicule)
     {
-        //
+        return view('vehicules.show', compact('vehicule'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Vehicule $vehicule)
     {
-        //
+        return view('vehicules.edit', compact('vehicule'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateVehiculeRequest $request, Vehicule $vehicule)
+    public function update(Request $request, Vehicule $vehicule)
     {
-        //
+        $data = $request->validate([
+            'immatriculation' => 'required|string|max:255',
+            'categorie' => 'required|string|max:255',
+            'marque' => 'required|string|max:255',
+            'status' => 'required|in:disponible,indisponible,au service,maintenance',
+            'description' => 'nullable|string',
+            'annee_fabrication' => 'required|string|max:4'
+        ]);
+
+        
+        $data['user_id'] = Auth::id();
+        $vehicule->update($data);
+
+        return redirect()->route('vehicules.index')->with('success', 'Véhicule mis à jour avec succès.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Vehicule $vehicule)
     {
-        //
+        $vehicule->delete();
+        return redirect()->route('vehicules.index')->with('success', 'Véhicule supprimé avec succès.');
     }
 }
