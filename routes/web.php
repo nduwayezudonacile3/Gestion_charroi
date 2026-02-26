@@ -12,15 +12,37 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
+ 
+ 
 
+ 
+
+ 
+
+// Dashboard accessible même sans connexion
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Routes protégées par authentification
+Route::middleware(['auth','verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
+// Page login protégée par middleware guest
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', function () {
+     return view('auth.login');
+    })->name('login');
+});
+
+// Inclut les routes d'authentification si Breeze/Jetstream installé
+require __DIR__.'/auth.php';
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -29,3 +51,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+ 
+ 
