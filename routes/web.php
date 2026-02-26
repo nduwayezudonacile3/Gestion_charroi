@@ -29,3 +29,14 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+use App\Http\Controllers\EmployeController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/employes', [EmployeController::class, 'index'])->name('employes.liste');
+    Route::get('/employes/ajouter', [EmployeController::class, 'create'])->name('employes.ajouter');
+    Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
+  // Modifier un employé
+Route::get('/employes/{employe}/edit', [EmployeController::class, 'edit'])->name('employes.edit');
+Route::put('/employes/{employe}', [EmployeController::class, 'update'])->name('employes.update');
+    Route::delete('/employes/{id}', [EmployeController::class, 'destroy'])->name('employes.delete');
+});

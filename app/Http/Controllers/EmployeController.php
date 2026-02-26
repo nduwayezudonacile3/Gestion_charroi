@@ -8,59 +8,60 @@ use App\Http\Requests\UpdateEmployeRequest;
 
 class EmployeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Liste tous les employés
     public function index()
     {
-        //
+        $employes = Employe::all();
+        return view('employes.liste', compact('employes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulaire pour ajouter
     public function create()
     {
-        //
+        return view('employes.ajouter');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // STOCKER un nouvel employé
     public function store(StoreEmployeRequest $request)
     {
-        //
+        Employe::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'telephone' => $request->telephone,
+            'residence' => $request->residence,
+            'fonction' => $request->fonction,
+            'description' => $request->description,
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('employes.liste')->with('success', 'Employé ajouté !');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employe $employe)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Formulaire pour modifier
     public function edit(Employe $employe)
     {
-        //
+        return view('employes.update', compact('employe'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // METTRE À JOUR un employé existant
     public function update(UpdateEmployeRequest $request, Employe $employe)
     {
-        //
+        $employe->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'telephone' => $request->telephone,
+            'residence' => $request->residence,
+            'fonction' => $request->fonction,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('employes.liste')->with('success', 'Employé mis à jour !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Supprimer un employé
     public function destroy(Employe $employe)
     {
-        //
+        $employe->delete();
+        return redirect()->route('employes.liste')->with('success', 'Employé supprimé !');
     }
 }
