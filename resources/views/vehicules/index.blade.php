@@ -33,14 +33,30 @@
                 <td>{{ $vehicule->annee_fabrication }}</td>
                 <td>{{ $vehicule->user->name }}</td>
                 <td>
-                    <a href="{{ route('vehicules.edit', $vehicule->id) }}" class="btn btn-primary btn-sm">Éditer</a>
-                    <form action="{{ route('vehicules.destroy', $vehicule->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
+                     <!-- Dropdown menu ⋮ -->
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="actionMenu{{ $vehicule->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                &#x22EE;
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="actionMenu{{ $vehicule->id }}">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('vehicules.edit', $vehicule->id) }}">Modifier</a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger" type="button"
+                                        onclick="if(confirm('Voulez-vous vraiment supprimer ce vehicule ?')){ document.getElementById('deleteForm{{ $vehicule->id }}').submit(); }">
+                                        Supprimer
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Formulaire caché pour la suppression -->
+                        <form id="deleteForm{{ $vehicule->id }}" action="{{ route('vehicules.destroy', $vehicule->id) }}" method="POST" style="display:none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

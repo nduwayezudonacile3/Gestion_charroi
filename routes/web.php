@@ -3,8 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VehiculeController;
-    use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\DeplacementEmployeController;
+ use App\Http\Controllers\DeplacementController;
+ use App\Http\Controllers\ProjetController;
+ use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +67,14 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('employes', EmployeController::class)->middleware('auth');
+
+Route::resource('deplacements', DeplacementController::class);
+Route::resource('deplacementemployes', DeplacementEmployeController::class);
+
+
+Route::resource('projets', ProjetController::class);
+
+Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';

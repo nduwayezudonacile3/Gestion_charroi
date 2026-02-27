@@ -3,64 +3,72 @@
 namespace App\Http\Controllers;
 
 use App\Models\Projet;
-use App\Http\Requests\StoreProjetRequest;
-use App\Http\Requests\UpdateProjetRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Liste des projets
     public function index()
     {
-        //
+        $projets = Projet::all();
+        return view('projets.index', compact('projets'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Formulaire de création
     public function create()
     {
-        //
+        return view('projets.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProjetRequest $request)
+    // Enregistrement d'un projet
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code_projet'   => 'required|string|max:255',
+            'nom_projet'    => 'required|string|max:255',
+            'delais_projet' => 'required|string|max:255',
+            'budget'        => 'required|numeric',
+            'statut'        => 'nullable|numeric',
+            'description'   => 'nullable|string',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        Projet::create($validated);
+
+        return redirect()->route('projets.index')->with('success', 'Projet créé avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Projet $projet)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Formulaire d'édition
     public function edit(Projet $projet)
     {
-        //
+        return view('projets.edit', compact('projet'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProjetRequest $request, Projet $projet)
+    // Mise à jour d'un projet
+    public function update(Request $request, Projet $projet)
     {
-        //
+        $validated = $request->validate([
+            'code_projet'   => 'required|string|max:255',
+            'nom_projet'    => 'required|string|max:255',
+            'delais_projet' => 'required|string|max:255',
+            'budget'        => 'required|numeric',
+            'statut'        => 'nullable|numeric',
+            'description'   => 'nullable|string',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        $projet->update($validated);
+
+        return redirect()->route('projets.index')->with('success', 'Projet mis à jour avec succès.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Suppression d'un projet
     public function destroy(Projet $projet)
     {
-        //
+        $projet->delete();
+        return redirect()->route('projets.index')->with('success', 'Projet supprimé avec succès.');
     }
 }

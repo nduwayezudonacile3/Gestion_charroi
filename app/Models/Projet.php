@@ -14,9 +14,12 @@ class Projet extends Model
         'nom_projet',
         'delais_projet',
         'budget',
+         'statut',
         'description',
         'user_id',
     ];
+     
+
 
     // Relation : un projet appartient à un user
     public function user()

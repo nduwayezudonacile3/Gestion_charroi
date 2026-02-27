@@ -17,6 +17,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Téléphone</th>
@@ -30,6 +31,7 @@
         <tbody>
             @foreach($employes as $employe)
             <tr>
+                <td>{{ $employe->id }}</td>
                 <td>{{ $employe->nom }}</td>
                 <td>{{ $employe->prenom }}</td>
                 <td>{{ $employe->telephone }}</td>
@@ -38,25 +40,34 @@
                   <td>{{ $employe->description }}</td>
                 <td>{{ $employe->user->name }}</td>
                 <td>
-                    <a href="{{ route('employes.edit', $employe->id) }}" 
-                        class="btn btn-warning btn-sm">Modifier</a>
-
-                    <form action="{{ route('employes.destroy', $employe->id) }}" 
-                        method="POST" style="display:inline-block">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                            class="btn btn-danger btn-sm"
-                            onclick="return confirm('Confirmer la suppression ?')">
-                            Supprimer
-                        </button>
-                    </form>
-                </td>
-            </tr>
+                    <!-- Dropdown menu ⋮ -->
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="actionMenu{{ $employe->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                &#x22EE;
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="actionMenu{{ $employe->id }}">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('employes.edit', $employe->id) }}">Modifier</a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger" type="button"
+                                        onclick="if(confirm('Voulez-vous vraiment supprimer cet employe ?')){ document.getElementById('deleteForm{{ $employe->id }}').submit(); }">
+                                        Supprimer
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Formulaire caché pour la suppression -->
+                        <form id="deleteForm{{ $employe->id }}" action="{{ route('employes.destroy', $employe->id) }}" method="POST" style="display:none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>
-
-    {{ $employes->links() }}
 </div>
 @endsection
+
+    

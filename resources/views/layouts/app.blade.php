@@ -86,13 +86,13 @@
             <a href="{{ route('vehicules.index') }}" class="nav-link">
                 <i class="bi bi-truck fs-5"></i> Véhicules
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('projets.index') }}" class="nav-link">
                 <i class="bi bi-folder2-open fs-5"></i> Projects
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('deplacements.index') }}" class="nav-link">
                 <i class="bi bi-arrow-left-right fs-5"></i> Déplacements
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('users.index') }}" class="nav-link">
                 <i class="bi bi-person-circle fs-5"></i> Users
             </a>
         </nav>

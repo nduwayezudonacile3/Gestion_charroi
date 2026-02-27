@@ -2,75 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employe;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class EmployeController extends Controller
+class UserController extends Controller
 {
+    // Liste tous les utilisateurs
     public function index()
     {
-        $employes = Employe::latest()->paginate(10);
-        return view('employes.index', compact('employes'));
+        $users = User::all();
+        return view('users.index', compact('users'));
     }
 
+    // Affiche le formulaire de création
     public function create()
     {
-        return view('employes.create');
+        return view('users.create');
     }
 
+    // Enregistre un nouvel utilisateur
     public function store(Request $request)
     {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'telephone' => 'nullable|string|max:20',
-            'residence' => 'nullable|string|max:255',
-            'fonction' => 'nullable|string|max:255',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6',
+            'role' => 'required|string',
             'description' => 'nullable|string',
+            'statut' => 'required|in:active,inactive',
         ]);
 
-        Employe::create([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'telephone' => $request->telephone,
-            'residence' => $request->residence,
-            'fonction' => $request->fonction,
-            'description' => $request->description,
-            'user_id' => Auth::id(),
-        ]);
+        $validated['password'] = bcrypt($validated['password']);
 
-        return redirect()->route('employes.index')
-            ->with('success', 'Employé ajouté avec succès.');
+        User::create($validated);
+
+        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
     }
 
-    public function edit(Employe $employe)
+    // Affiche le formulaire d'édition
+    public function edit(User $user)
     {
-        return view('employes.edit', compact('employe'));
+        return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, Employe $employe)
+    // Met à jour un utilisateur
+    public function update(Request $request, User $user)
     {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'telephone' => 'nullable|string|max:20',
-            'residence' => 'nullable|string|max:255',
-            'fonction' => 'nullable|string|max:255',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'role' => 'required|string',
             'description' => 'nullable|string',
+            'statut' => 'required|in:active,inactive',
         ]);
 
-        $employe->update($request->all());
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
 
-        return redirect()->route('employes.index')
-            ->with('success', 'Employé modifié avec succès.');
+        $user->update($validated);
+
+        return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
-    public function destroy(Employe $employe)
+    // Supprime un utilisateur
+    public function destroy(User $user)
     {
-        $employe->delete();
-
-        return redirect()->route('employes.index')
-            ->with('success', 'Employé supprimé avec succès.');
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
     }
 }

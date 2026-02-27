@@ -3,64 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeplacementEmploye;
-use App\Http\Requests\StoreDeplacementEmployeRequest;
-use App\Http\Requests\UpdateDeplacementEmployeRequest;
+use App\Models\Employe;
+use App\Models\Deplacement;
+use Illuminate\Http\Request;
 
 class DeplacementEmployeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $deplacementemployes = DeplacementEmploye::with(['employe','deplacement'])
+                                ->latest()->paginate(10);
+
+        return view('deplacementemployes.index', compact('deplacementemployes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $employes = Employe::all();
+        $deplacements = Deplacement::all();
+
+        return view('deplacementemployes.create', compact('employes','deplacements'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreDeplacementEmployeRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'employe_id' => 'required|exists:employe,id',
+            'deplacement_id' => 'required|exists:deplacement,id',
+        ]);
+
+        DeplacementEmploye::create($request->all());
+
+        return redirect()->route('deplacementemployes.index')
+            ->with('success', 'Affectation créée avec succès');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DeplacementEmploye $deplacementEmploye)
+    public function edit(DeplacementEmploye $deplacementemploye)
     {
-        //
+        $employes = Employe::all();
+        $deplacements = Deplacement::all();
+
+        return view('deplacementemployes.edit',
+            compact('deplacementemploye','employes','deplacements'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(DeplacementEmploye $deplacementEmploye)
+    public function update(Request $request, DeplacementEmploye $deplacementemploye)
     {
-        //
+        $request->validate([
+            'employe_id' => 'required|exists:employe,id',
+            'deplacement_id' => 'required|exists:deplacement,id',
+        ]);
+
+        $deplacementemploye->update($request->all());
+
+        return redirect()->route('deplacementemployes.index')
+            ->with('success', 'Affectation modifiée avec succès');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateDeplacementEmployeRequest $request, DeplacementEmploye $deplacementEmploye)
+    public function destroy(DeplacementEmploye $deplacementemploye)
     {
-        //
-    }
+        $deplacementemploye->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DeplacementEmploye $deplacementEmploye)
-    {
-        //
+        return redirect()->route('deplacementemployes.index')
+            ->with('success', 'Affectation supprimée');
     }
 }
