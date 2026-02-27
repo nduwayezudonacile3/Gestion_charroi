@@ -36,5 +36,10 @@
     <input type="text" name="annee_fabrication" class="form-control" value="{{ old('annee_fabrication', $vehicule->annee_fabrication ?? '') }}" required>
 </div>
 
+<button type="submit" class="btn btn-primary">
+    {{ isset($vehicule) ? 'Modifier' : 'Enregistrer' }}
+</button>
 
-<button type="submit" class="btn btn-primary">Enregistrer</button>
+<a href="{{ route('vehicules.index') }}" class="btn btn-secondary">
+    Annuler
+</a>

@@ -3,64 +3,74 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employe;
-use App\Http\Requests\StoreEmployeRequest;
-use App\Http\Requests\UpdateEmployeRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $employes = Employe::latest()->paginate(10);
+        return view('employes.index', compact('employes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('employes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreEmployeRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'residence' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        Employe::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'telephone' => $request->telephone,
+            'residence' => $request->residence,
+            'fonction' => $request->fonction,
+            'description' => $request->description,
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé ajouté avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employe $employe)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Employe $employe)
     {
-        //
+        return view('employes.edit', compact('employe'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateEmployeRequest $request, Employe $employe)
+    public function update(Request $request, Employe $employe)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'residence' => 'nullable|string|max:255',
+            'fonction' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $employe->update($request->all());
+
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé modifié avec succès.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Employe $employe)
     {
-        //
+        $employe->delete();
+
+        return redirect()->route('employes.index')
+            ->with('success', 'Employé supprimé avec succès.');
     }
 }

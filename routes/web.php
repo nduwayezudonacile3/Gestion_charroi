@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VehiculeController;
+    use App\Http\Controllers\EmployeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +58,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('vehicules', VehiculeController::class);
+
+
+Route::resource('employes', EmployeController::class)->middleware('auth');
 });
 
 require __DIR__.'/auth.php';

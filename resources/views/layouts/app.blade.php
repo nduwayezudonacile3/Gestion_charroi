@@ -80,10 +80,10 @@
             <a href="{{route('dashboard')}}" class="nav-link active" aria-current="page">
                 <i class="bi bi-speedometer2 fs-5"></i> Dashboard
             </a>
-             <a href="{{ route('vehicules.index') }} " class="nav-link" aria-current="page">
+             <a href="{{ route('employes.index') }}" class="nav-link" aria-current="page">
                 <i class="bi bi-people-fill fs-5"></i> Employés
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('vehicules.index') }}" class="nav-link">
                 <i class="bi bi-truck fs-5"></i> Véhicules
             </a>
             <a href="#" class="nav-link">
