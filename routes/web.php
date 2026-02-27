@@ -16,21 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
  */
  
- 
 
- 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
- 
+// Page d’accueil = dashboard protégé
+Route::middleware(['auth', 'verified'])->group(function () {
 
-// Dashboard accessible même sans connexion
-Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-// Routes protégées par authentification
-Route::middleware(['auth','verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    // Routes d'authentification Breeze
+require __DIR__.'/auth.php';
 
 // Page login protégée par middleware guest
 Route::middleware(['guest'])->group(function () {
@@ -41,6 +42,11 @@ Route::middleware(['guest'])->group(function () {
 
 // Inclut les routes d'authentification si Breeze/Jetstream installé
 require __DIR__.'/auth.php';
+
+
+     
+});
+
 
 
 
