@@ -24,7 +24,7 @@ return new class extends Migration
 
         $table->unique(['employe_id', 'deplacement_id']);
          $table->timestamps();
-    });P
+    });
 }
 
 

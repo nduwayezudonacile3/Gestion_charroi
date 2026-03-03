@@ -150,7 +150,7 @@ public function storeTerminer(Request $request, $id)
     // Récupérer uniquement les déplacements "En cours"
     $deplacements = Deplacement::where('status', 'En cours')->get();
 
-    return view('deplacements.fin-mission', compact('deplacements'));
+    return view('deplacements.terminer', compact('deplacements'));
 }
 public function finMission(Request $request)
 {
