@@ -23,51 +23,42 @@ class Deplacement extends Model
         'carburant_consomme',
         'motif',
         'frais_mission',
-        'statut',
+        'status',
         'user_id',
         'vehicule_id',
         'projet_id',
+        'employe_id',
         'approved_by',
         'description',
     ];
 
-    protected $casts = [
-        'date_depart' => 'datetime',
-        'date_prevus' => 'datetime',
-        'date_retour' => 'datetime',
-    ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relations
-    |--------------------------------------------------------------------------
-    */
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function vehicule()
-    {
-        return $this->belongsTo(Vehicule::class);
-    }
-
+    // Relation avec Projet
     public function projet()
     {
         return $this->belongsTo(Projet::class);
     }
 
-    // utilisateur qui approuve
-    public function approbateur()
+    // Relation avec Véhicule
+    public function vehicule()
+    {
+        return $this->belongsTo(Vehicule::class);
+    }
+
+    // Relation avec Utilisateur (créateur du déplacement)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Relation avec Employés
+    public function employes()
+    {
+        return $this->belongsToMany(Employe::class, 'deplacement_employes', 'deplacement_id', 'employe_id');
+    }
+
+    // Relation avec l’utilisateur qui approuve (approved_by)
+    public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
-public function employes()
-{
-    return $this->belongsToMany(
-        Employe::class,
-        'deplacementemployes'
-    );
-}
 }

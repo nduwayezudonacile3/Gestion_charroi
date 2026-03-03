@@ -36,11 +36,6 @@ class VehiculeController extends Controller
         return redirect()->route('vehicules.index')->with('success', 'Véhicule ajouté avec succès.');
     }
 
-    public function show(Vehicule $vehicule)
-    {
-        return view('vehicules.show', compact('vehicule'));
-    }
-
     public function edit(Vehicule $vehicule)
     {
         return view('vehicules.edit', compact('vehicule'));
@@ -57,7 +52,7 @@ class VehiculeController extends Controller
             'annee_fabrication' => 'required|string|max:4'
         ]);
 
-        
+
         $data['user_id'] = Auth::id();
         $vehicule->update($data);
 

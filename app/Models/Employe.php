@@ -30,10 +30,12 @@ class Employe extends Model
         return $this->belongsTo(User::class);
     }
     public function deplacements()
-{
-    return $this->belongsToMany(
-        Deplacement::class,
-        'deplacementemployes'
-    );
-}
+    {
+        return $this->belongsToMany(
+            Deplacement::class,
+            'deplacement_employe',
+            'employe_id',
+            'deplacement_id'
+        );
+    }
 }

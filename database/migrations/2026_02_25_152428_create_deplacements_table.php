@@ -28,7 +28,7 @@ return new class extends Migration
         $table->string('motif');
         $table->double('frais_mission')->default(0);
 
-        $table->enum('statut', [
+        $table->enum('status', [
             'En attente',
             'En cours',
             'Termine',
@@ -45,6 +45,10 @@ return new class extends Migration
 
         $table->foreignId('projet_id')
               ->constrained('projets')
+              ->onDelete('cascade');
+
+        $table->foreignId('employe_id')
+              ->constrained('employes')
               ->onDelete('cascade');
 
         $table->foreignId('approved_by')

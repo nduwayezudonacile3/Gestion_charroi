@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
  */
- 
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ Route::middleware(['guest'])->group(function () {
 require __DIR__.'/auth.php';
 
 
-     
+
 });
 
 
@@ -69,6 +69,16 @@ Route::middleware('auth')->group(function () {
 Route::resource('employes', EmployeController::class)->middleware('auth');
 
 Route::resource('deplacements', DeplacementController::class);
+
+
+// Terminer la mission
+Route::get('/deplacements/{id}/terminer', [DeplacementController::class, 'terminer'])
+    ->name('deplacements.terminer');
+// Enregistrer directement la fin de mission
+Route::post('/deplacements/{deplacement}/terminer', [DeplacementController::class, 'storeterminer'])
+    ->name('deplacements.storeTerminer');
+
+
 Route::resource('deplacementemployes', DeplacementEmployeController::class);
 
 
@@ -78,5 +88,4 @@ Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';
- 
- 
+
