@@ -24,7 +24,7 @@
                     <th>Projet</th>
                     <th>Litineraire</th>
                     <th>Date départ</th>
-                    <th>Date prévue</th>
+                    <th>Date prevus</th>
                     <th>KM départ</th>
                     <th>Carburant initial</th>
                     <th>Motif</th>

@@ -12,14 +12,13 @@ use Illuminate\Http\Request;
 class DeplacementController extends Controller
 {
     // Liste des déplacements
-    public function index()
-    {
-        $deplacements = Deplacement::with(['projet','vehicule','employes','user','approvedBy'])
-            ->orderBy('id','desc')
-            ->paginate(10);
+  public function index()
+{
+    $deplacements = Deplacement::with(['projet', 'vehicule', 'employes'])
+        ->paginate(10);
 
-        return view('deplacements.index', compact('deplacements'));
-    }
+    return view('deplacements.index', compact('deplacements'));
+}
 
     // Formulaire création
     public function create()
