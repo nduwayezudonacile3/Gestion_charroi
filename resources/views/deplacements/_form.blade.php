@@ -19,7 +19,7 @@
 </div>
 
 <div class="mb-3">
-    <label for="litineraire" class="form-label">Itinéraire</label>
+    <label for="litineraire" class="form-label">Litineraire</label>
     <input type="text" name="litineraire" class="form-control"
         value="{{ old('litineraire', $deplacement->litineraire ?? '') }}" required>
 </div>

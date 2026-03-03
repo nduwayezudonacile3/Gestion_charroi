@@ -79,7 +79,7 @@
 
                 {{-- Itinéraire --}}
                 <div class="mb-3">
-                    <label>Itinéraire</label>
+                    <label>Litineraire</label>
                     <input type="text" name="litineraire" class="form-control" value="{{ old('litineraire') }}"
                         required>
                 </div>

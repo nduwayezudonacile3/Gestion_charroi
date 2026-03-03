@@ -13,7 +13,7 @@
         @endif
         <div class="mb-4">
             <p><strong>Projet :</strong> {{ $deplacement->projet->nom_projet ?? 'N/A' }}</p>
-            <p><strong>Litinéraire :</strong> {{ $deplacement->litineraire }}</p>
+            <p><strong>Litineraire :</strong> {{ $deplacement->litineraire }}</p>
             <p><strong>Date départ :</strong>
                 {{ $deplacement->date_depart ? date('d/m/Y H:i', strtotime($deplacement->date_depart)) : '' }}</p>
             <p><strong>Date prévue :</strong>
