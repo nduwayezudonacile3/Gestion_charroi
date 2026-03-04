@@ -28,6 +28,7 @@
                         <th>Status</th>
                         <th>Véhicule</th>
                         <th>Employé</th>
+                        <th>Utilisateur</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -55,7 +56,7 @@
                             {{-- Véhicule --}}
                             <td>
                                 @if ($deplacement->vehicule)
-                                    {{ $deplacement->vehicule->immatriculation }}
+                                    {{ $deplacement->vehicule->immatriculation }}. {{ $deplacement->vehicule->status }}
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
@@ -72,6 +73,14 @@
                                     </div>
                                 @else
                                     <span class="text-muted">Non assigné</span>
+                                @endif
+                            </td>
+                            {{-- user --}}
+                            <td>
+                                @if ($deplacement->user)
+                                    {{ $deplacement->user->name }}. {{ $deplacement->user->username }}
+                                @else
+                                    <span class="text-muted">—</span>
                                 @endif
                             </td>
 

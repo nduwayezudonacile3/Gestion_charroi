@@ -3,6 +3,7 @@
     <input type="text" class="form-control" value="{{ $deplacement->code_deplacement ?? 'Généré automatiquement' }}"
         readonly>
 </div>
+<input type="hidden" name="code_deplacement" value="{{ $deplacement->code_deplacement }} ">
 
 <div class="mb-3">
     <label for="date_depart" class="form-label">Date départ</label>

@@ -75,7 +75,7 @@ Route::resource('deplacements', DeplacementController::class);
 Route::get('/deplacements/{id}/terminer', [DeplacementController::class, 'terminer'])
     ->name('deplacements.terminer');
 // Enregistrer directement la fin de mission
-Route::post('/deplacements/{deplacement}/terminer', [DeplacementController::class, 'storeterminer'])
+Route::put('/deplacements/{deplacement}/terminer', [DeplacementController::class, 'storeterminer'])
     ->name('deplacements.storeTerminer');
 
 

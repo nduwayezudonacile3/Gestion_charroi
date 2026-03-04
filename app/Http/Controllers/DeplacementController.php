@@ -96,6 +96,8 @@ public function terminer($id)
     $deplacement = Deplacement::findOrFail($id);
     $users = User::all();
 
+
+
     // Vérifie que le déplacement est en cours
     // if ($deplacement->status !== 'En cours') {
     //     return redirect()->back()->with('error', 'Ce déplacement n\'est pas en cours.');
@@ -110,29 +112,33 @@ public function storeTerminer(Request $request, $id)
     $deplacement = Deplacement::findOrFail($id);
 
     $request->validate([
-        'date_retour' => 'required|date',
-        'km_retour' => 'required|numeric|min:' . $deplacement->km_depart,
-        'carburant_restant' => 'required|numeric|min:0',
-        'approved_by' => 'nullable|string|max:255',
+        'date_retour'        => 'required|date',
+        'km_retour'          => 'required|numeric|min:' . $deplacement->km_depart,
+        'carburant_restant'  => 'required|numeric|min:0',
+        'approved_by'        => 'required|exists:users,id',
     ]);
 
+    $km_parcourus = $request->km_retour - $deplacement->km_depart;
+    $carburant_consomme = $deplacement->carburant_initial - $request->carburant_restant;
+
     $deplacement->update([
-        'date_retour' => $request->date_retour,
-        'km_retour' => $request->km_retour,
-        'km_parcouru' => $request->km_retour - $deplacement->km_depart,
-        'carburant_restant' => $request->carburant_restant,
-        'carburant_consomme' => $deplacement->carburant_initial - $request->carburant_restant,
-        'approved_by' => $request->approved_by,
-        'status' => 'Termine',
+        'date_retour'        => $request->date_retour,
+        'km_retour'          => $request->km_retour,
+        'km_parcourus'       => $km_parcourus, // vérifie le nom exact de ta colonne
+        'carburant_restant'  => $request->carburant_restant,
+        'carburant_consomme' => $carburant_consomme,
+        'approved_by'        => $request->approved_by,
+        'status'             => 'Termine',
     ]);
 
     // Mettre le véhicule disponible à nouveau si utilisé
-    if($deplacement->vehicule){
+    if ($deplacement->vehicule) {
         $deplacement->vehicule->update(['status' => 'Disponible']);
     }
 
     return redirect()->route('deplacements.index')->with('success', 'Fin de mission enregistrée avec succès.');
 }
+
     // Formulaire édition
     public function edit($id)
     {
@@ -151,96 +157,99 @@ public function storeTerminer(Request $request, $id)
 
     return view('deplacements.terminer', compact('deplacements'));
 }
-public function finMission(Request $request)
+public function finMission(Request $request, $id)
 {
-    // Récupérer le premier déplacement "En cours"
-    $deplacement = Deplacement::where('status', 'En cours')->first();
+    // Récupérer le déplacement par son ID
+    $deplacement = Deplacement::findOrFail($id);
 
-    if (!$deplacement) {
-        return redirect()->back()->with('error', 'Aucun déplacement en cours à terminer.');
+    if ($deplacement->status !== 'En cours') {
+        return redirect()->back()->with('error', 'Ce déplacement n\'est pas en cours.');
     }
 
     // Validation des champs
     $request->validate([
-        'carburant_restant' => 'required|numeric|min:0',
-        'carburant_consomme' => 'required|numeric|min:0',
-        'km_retour' => 'required|numeric|min:0',
-        'approved_by' => 'required|string|max:255',
+        'date_retour'        => 'required|date',
+        'km_retour'          => 'required|numeric|min:' . $deplacement->km_depart,
+        'carburant_restant'  => 'required|numeric|min:0',
+        'approved_by'        => 'required|exists:users,id',
     ]);
 
-    // Calcul du km parcouru
-    $km_parcouru = $request->km_retour - ($deplacement->km_depart ?? 0);
-
-    // Mettre à jour le déplacement
-    $deplacement->status = 'Termine';
-    $deplacement->date_retour = now();
-    $deplacement->km_retour = $request->km_retour;
-    $deplacement->km_parcouru = $km_parcouru;
-    $deplacement->carburant_restant = $request->carburant_restant;
-    $deplacement->carburant_consomme = $request->carburant_consomme;
-    $deplacement->approved_by = $request->approved_by;
-
-    $deplacement->save();
-
-    return redirect()->back()->with('success', 'La mission a été terminée avec succès.');
-}
+    // Calculs
+    $km_parcourus = $request->km_retour - $deplacement->km_depart;
+    $carburant_consomme = $deplacement->carburant_initial - $request->carburant_restant;
 
     // Mise à jour
-    public function update(Request $request, $id)
-    {
-        $deplacement = Deplacement::findOrFail($id);
+    $deplacement->update([
+        'status'             => 'Termine',
+        'date_retour'        => $request->date_retour,
+        'km_retour'          => $request->km_retour,
+        'km_parcourus'       => $km_parcourus,
+        'carburant_restant'  => $request->carburant_restant,
+        'carburant_consomme' => $carburant_consomme,
+        'approved_by'        => $request->approved_by,
+    ]);
 
-        $request->validate([
-            'code_deplacement'   => 'required|string|max:50|unique:deplacements,code_deplacement,'.$deplacement->id,
-            'projet_id'          => 'required|exists:projets,id',
-            'vehicule_id'        => 'required|exists:vehicules,id',
-            'user_id'            => 'required|exists:users,id',
-            'employe_ids'        => 'required|array|min:1',
-            'employe_ids.*'      => 'exists:employes,id',
-            'litineraire'        => 'required|string',
-            'date_depart'        => 'required|date',
-            'date_prevus'        => 'required|date',
-            'km_depart'          => 'required|numeric',
-            'carburant_initial'  => 'required|numeric',
-            'motif'              => 'required|string',
-            'frais_mission'      => 'nullable|numeric',
-            'description'        => 'nullable|string',
-            'date_retour'        => 'nullable|date',
-            'km_retour'          => 'nullable|numeric',
-            'carburant_restant'  => 'nullable|numeric',
-            'approved_by'        => 'nullable|exists:users,id',
-        ]);
+    return redirect()->route('deplacements.index')->with('success', 'La mission a été terminée avec succès.');
+}
 
-        $km_parcourus = $request->filled('km_retour') ? $request->km_retour - $request->km_depart : null;
-        $carburant_consomme = $request->filled('carburant_restant') ? $request->carburant_initial - $request->carburant_restant : null;
 
-        $deplacement->update([
-            'code_deplacement'   => $request->code_deplacement,
-            'projet_id'          => $request->projet_id,
-            'vehicule_id'        => $request->vehicule_id,
-            'user_id'            => $request->user_id,
-            'litineraire'        => $request->litineraire,
-            'date_depart'        => $request->date_depart,
-            'date_prevus'        => $request->date_prevus,
-            'km_depart'          => $request->km_depart,
-            'carburant_initial'  => $request->carburant_initial,
-            'motif'              => $request->motif,
-            'frais_mission'      => $request->frais_mission,
-            'description'        => $request->description,
-            'date_retour'        => $request->date_retour,
-            'km_retour'          => $request->km_retour,
-            'km_parcourus'       => $km_parcourus,
-            'carburant_restant'  => $request->carburant_restant,
-            'carburant_consomme' => $carburant_consomme,
-            'approved_by'        => $request->approved_by,
-            'status'             => $request->status,
-        ]);
+    // Mise à jour
+   public function update(Request $request, $id)
+{
+    $deplacement = Deplacement::findOrFail($id);
 
-        // Synchroniser les employés sélectionnés via la table pivot
-        $deplacement->employes()->sync($request->employe_ids);
+    $request->validate([
+        'code_deplacement'   => 'required|string|max:50|unique:deplacements,code_deplacement,' . $deplacement->id . ',id',
+        'projet_id'          => 'required|exists:projets,id',
+        'vehicule_id'        => 'required|exists:vehicules,id',
+        'user_id'            => 'required|exists:users,id',
+        'employe_ids'        => 'required|array|min:1',
+        'employe_ids.*'      => 'exists:employes,id',
+        'litineraire'        => 'required|string',
+        'date_depart'        => 'required|date',
+        'date_prevus'        => 'required|date',
+        'km_depart'          => 'required|numeric',
+        'carburant_initial'  => 'required|numeric',
+        'motif'              => 'required|string',
+        'frais_mission'      => 'nullable|numeric',
+        'description'        => 'nullable|string',
+        'date_retour'        => 'nullable|date',
+        'km_retour'          => 'nullable|numeric',
+        'carburant_restant'  => 'nullable|numeric',
+        'approved_by'        => 'nullable|exists:users,id',
+        'status'             => 'nullable|string',
+    ]);
 
-        return redirect()->route('deplacements.index')->with('success','Déplacement mis à jour.');
-    }
+    $km_parcourus = $request->filled('km_retour') ? $request->km_retour - $request->km_depart : null;
+    $carburant_consomme = $request->filled('carburant_restant') ? $request->carburant_initial - $request->carburant_restant : null;
+
+    $deplacement->update([
+        'code_deplacement'   => $request->code_deplacement,
+        'projet_id'          => $request->projet_id,
+        'vehicule_id'        => $request->vehicule_id,
+        'user_id'            => $request->user_id,
+        'litineraire'        => $request->litineraire,
+        'date_depart'        => $request->date_depart,
+        'date_prevus'        => $request->date_prevus,
+        'km_depart'          => $request->km_depart,
+        'carburant_initial'  => $request->carburant_initial,
+        'motif'              => $request->motif,
+        'frais_mission'      => $request->frais_mission,
+        'description'        => $request->description,
+        'date_retour'        => $request->date_retour,
+        'km_retour'          => $request->km_retour,
+        'km_parcourus'       => $km_parcourus,
+        'carburant_restant'  => $request->carburant_restant,
+        'carburant_consomme' => $carburant_consomme,
+        'approved_by'        => $request->approved_by,
+        'status'             => $request->status,
+    ]);
+
+    $deplacement->employes()->sync($request->employe_ids);
+
+    return redirect()->route('deplacements.index')->with('success','Déplacement mis à jour.');
+}
+
 
     // Suppression
     public function destroy($id)
