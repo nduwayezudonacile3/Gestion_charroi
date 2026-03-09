@@ -58,6 +58,9 @@ class Projet extends Model
 
         // Projet terminé (date actuelle > date_cloture)
         if ($now->greaterThan($dateCloture)) {
+            $this->update([
+                'statut'=>'Terminé'
+            ]);
             return 'Terminé';
         }
 
@@ -65,12 +68,24 @@ class Projet extends Model
         $tempsRestant = $now->diffInMonths($dateCloture);
 
         if ($tempsRestant >= 1 && $tempsRestant <= 4) {
+            $this->update([
+                'statut'=>'En cours'
+            ]);
             return 'En cours';
         } elseif ($tempsRestant >= 5 && $tempsRestant <= 8) {
+             $this->update([
+                'statut'=>'En cours'
+            ]);
             return 'En cours';
         } elseif ($tempsRestant >= 9 && $tempsRestant <= 12) {
+             $this->update([
+                'statut'=>'Presque terminé'
+            ]);
             return 'Presque terminé';
         } else {
+             $this->update([
+                'statut'=>'Terminé'
+            ]);
             return 'Terminé';
         }
     }
