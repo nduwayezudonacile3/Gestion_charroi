@@ -27,9 +27,9 @@ class ProjetController extends Controller
         $validated = $request->validate([
             'code_projet'   => 'required|string|max:255',
             'nom_projet'    => 'required|string|max:255',
-            'delais_projet' => 'required|string|max:255',
-            'budget'        => 'required|numeric',
-            'statut'        => 'nullable|numeric',
+            'date_debut'    => 'required|date',
+            'date_cloture'  => 'required|date',
+
             'description'   => 'nullable|string',
         ]);
 
@@ -52,13 +52,13 @@ class ProjetController extends Controller
         $validated = $request->validate([
             'code_projet'   => 'required|string|max:255',
             'nom_projet'    => 'required|string|max:255',
-            'delais_projet' => 'required|string|max:255',
-            'budget'        => 'required|numeric',
-            'statut'        => 'nullable|numeric',
+            'date_debut'    => 'required|date',
+            'date_cloture'  => 'required|date',
             'description'   => 'nullable|string',
         ]);
 
         $validated['user_id'] = Auth::id();
+
 
         $projet->update($validated);
 

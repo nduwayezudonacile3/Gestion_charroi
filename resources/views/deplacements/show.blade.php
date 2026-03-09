@@ -10,6 +10,14 @@
                 <td>{{ $deplacement->code_deplacement }}</td>
             </tr>
             <tr>
+                <th>Chef mission</th>
+                <td>{{ $deplacement->chef_mission }}</td>
+            </tr>
+            <tr>
+                <th>Composantes mission</th>
+                <td>{{ $deplacement->composantes_mission }}</td>
+            </tr>
+            <tr>
                 <th>Projet</th>
                 <td>{{ $deplacement->projet->nom_projet ?? 'N/A' }}</td>
             </tr>
@@ -41,10 +49,6 @@
                 <td>{{ $deplacement->motif }}</td>
             </tr>
             <tr>
-                <th>Frais mission</th>
-                <td>{{ number_format($deplacement->frais_mission ?? 0, 2) }} €</td>
-            </tr>
-            <tr>
                 <th>Status</th>
                 <td>{{ $deplacement->status }}</td>
             </tr>
@@ -53,7 +57,7 @@
                 <td>{{ $deplacement->vehicule?->immatriculation ?? 'Aucun véhicule' }}</td>
             </tr>
             <tr>
-                <th>Employés</th>
+                <th>Chauffeurs</th>
                 <td>
                     @forelse($deplacement->employes as $employe)
                         <span class="badge bg-info">{{ $employe->nom }} {{ $employe->prenom }}</span>

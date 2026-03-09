@@ -38,7 +38,7 @@
             @if (!isset($deplacement) || $deplacement->status != 'En cours')
                 {{-- Employés --}}
                 <div class="mb-3">
-                    <label class="mb-2">Employés</label>
+                    <label class="mb-2">CHAUFFEURS</label>
                     <select name="employe_ids[]" class="form-control" multiple required>
                         @foreach ($employes as $employe)
                             <option value="{{ $employe->id }}"
@@ -48,6 +48,19 @@
                         @endforeach
                     </select>
                     <small class="form-text text-muted">Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs employés</small>
+                </div>
+                {{-- chef mission --}}
+                <div class="mb-3">
+                    <label for="chef_mission" class="form-label">chef mission</label>
+                    <input type="text" name="chef_mission" class="form-control"
+                        value="{{ old('chef_mission', $deplacement->chef_mission ?? '') }}" required>
+
+                </div>
+                {{-- Composantes mission --}}
+                <div class="mb-3">
+                    <label for="composantes_mission" class="form-label">composantes mission</label>
+                    <input type="text" name="composantes_mission" class="form-control"
+                        value="{{ old('composantes_mission', $deplacement->composantes_mission ?? '') }}" required>
                 </div>
 
                 {{-- Projet --}}
@@ -115,13 +128,6 @@
                 <div class="mb-3">
                     <label>Motif</label>
                     <input type="text" name="motif" class="form-control" value="{{ old('motif') }}">
-                </div>
-
-                {{-- Frais mission --}}
-                <div class="mb-3">
-                    <label>Frais mission</label>
-                    <input type="number" step="0.01" name="frais_mission" class="form-control"
-                        value="{{ old('frais_mission') }}">
                 </div>
             @endif
 

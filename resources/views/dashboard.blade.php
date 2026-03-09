@@ -60,7 +60,7 @@
                 <h6 class="card-title">Projets récents</h6>
                 <ul class="list-group list-group-flush">
                     @foreach($dernierProjets as $projet)
-                        <li class="list-group-item">{{ $projet->nom_projet }} - {{ $projet->statut }}</li>
+                        <li class="list-group-item">{{ $projet->nom_projet }} - {{ $projet->statut_text }}</li>
                     @endforeach
                 </ul>
             </div>

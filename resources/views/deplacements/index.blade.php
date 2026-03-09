@@ -23,11 +23,13 @@
                 <thead>
                     <tr>
                         <th>Code</th>
+                        <th>Chef_mission</th>
+                        <th>Composantes_mission</th>
                         <th>Projet</th>
                         <th>Date départ</th>
                         <th>Status</th>
                         <th>Véhicule</th>
-                        <th>Employé</th>
+                        <th>CHAUFFEURS</th>
                         <th>Utilisateur</th>
                         <th>Actions</th>
                     </tr>
@@ -38,6 +40,8 @@
                             <td>
                                 <strong>{{ $deplacement->code_deplacement }}</strong>
                             </td>
+                            <td>{{ $deplacement->chef_mission }}</td>
+                            <td>{{ $deplacement->composantes_mission }}</td>
                             <td>{{ $deplacement->projet->nom_projet ?? 'N/A' }}</td>
                             <td>{{ $deplacement->date_depart ? date('d/m/Y H:i', strtotime($deplacement->date_depart)) : '' }}
                             </td>

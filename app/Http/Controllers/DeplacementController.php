@@ -35,6 +35,8 @@ class DeplacementController extends Controller
   public function store(Request $request)
 {
     $request->validate([
+        'chef_mission'        => 'required|string',
+        'composantes_mission' => 'required|string',
         'projet_id'          => 'required|exists:projets,id',
         'vehicule_id'        => 'required|exists:vehicules,id',
         'employe_ids'        => 'required|array|min:1',
@@ -45,7 +47,6 @@ class DeplacementController extends Controller
         'km_depart'          => 'required|numeric',
         'carburant_initial'  => 'required|numeric',
         'motif'              => 'required|string',
-        'frais_mission'      => 'nullable|numeric',
         'description'        => 'nullable|string',
         'date_retour'        => 'nullable|date',
         'km_retour'          => 'nullable|numeric',
@@ -54,10 +55,24 @@ class DeplacementController extends Controller
     ]);
 
 
-    $code = 'DEP-' . strtoupper(uniqid());
+// Compter combien de déplacements existent déjà
+$dernierNumero = Deplacement::count();
+
+// Le prochain numéro est +1
+$numero = $dernierNumero + 1;
+
+// Générer le code avec le format DEP-.001
+$code = 'DEP-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+
+// Résultat : DEP-.001, DEP-.002, DEP-.003, etc.
+
+
+
 
     $deplacement = Deplacement::create([
         'code_deplacement'   => $code,
+        'chef_mission'        => $request->chef_mission,
+        'composantes_mission' => $request->composantes_mission,
         'projet_id'          => $request->projet_id,
         'vehicule_id'        => $request->vehicule_id,
         'user_id'            => auth()->id(),
@@ -67,7 +82,6 @@ class DeplacementController extends Controller
         'km_depart'          => $request->km_depart,
         'carburant_initial'  => $request->carburant_initial,
         'motif'              => $request->motif,
-        'frais_mission'      => $request->frais_mission,
         'description'        => $request->description,
         'date_retour'        => $request->date_retour,
         'km_retour'          => $request->km_retour,
@@ -96,12 +110,6 @@ public function terminer($id)
     $deplacement = Deplacement::findOrFail($id);
     $users = User::all();
 
-
-
-    // Vérifie que le déplacement est en cours
-    // if ($deplacement->status !== 'En cours') {
-    //     return redirect()->back()->with('error', 'Ce déplacement n\'est pas en cours.');
-    // }
 
     return view('deplacements.terminer', compact('deplacement', 'users'));
 }
@@ -200,6 +208,8 @@ public function finMission(Request $request, $id)
 
     $request->validate([
         'code_deplacement'   => 'required|string|max:50|unique:deplacements,code_deplacement,' . $deplacement->id . ',id',
+         'chef_mission'        => 'required|string',
+        'composantes_mission' => 'required|string',
         'projet_id'          => 'required|exists:projets,id',
         'vehicule_id'        => 'required|exists:vehicules,id',
         'user_id'            => 'required|exists:users,id',
@@ -211,7 +221,6 @@ public function finMission(Request $request, $id)
         'km_depart'          => 'required|numeric',
         'carburant_initial'  => 'required|numeric',
         'motif'              => 'required|string',
-        'frais_mission'      => 'nullable|numeric',
         'description'        => 'nullable|string',
         'date_retour'        => 'nullable|date',
         'km_retour'          => 'nullable|numeric',
@@ -225,6 +234,8 @@ public function finMission(Request $request, $id)
 
     $deplacement->update([
         'code_deplacement'   => $request->code_deplacement,
+        'chef_mission'        => $request->chef_mission,
+        'composantes_mission' => $request->composantes_mission,
         'projet_id'          => $request->projet_id,
         'vehicule_id'        => $request->vehicule_id,
         'user_id'            => $request->user_id,
@@ -234,7 +245,6 @@ public function finMission(Request $request, $id)
         'km_depart'          => $request->km_depart,
         'carburant_initial'  => $request->carburant_initial,
         'motif'              => $request->motif,
-        'frais_mission'      => $request->frais_mission,
         'description'        => $request->description,
         'date_retour'        => $request->date_retour,
         'km_retour'          => $request->km_retour,

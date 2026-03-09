@@ -18,13 +18,13 @@ class DeplacementEmploye extends Model
 
     public $timestamps = false;
 
-    public function employe()
-    {
-        return $this->belongsTo(Employe::class);
-    }
+    // Dans Deplacement.php
+public function employes() {
+    return $this->belongsToMany(Employe::class, 'deplacement_employes');
+}
 
-    public function deplacement()
-    {
-        return $this->belongsTo(Deplacement::class);
-    }
+// Dans Employe.php
+public function deplacements() {
+    return $this->belongsToMany(Deplacement::class, 'deplacement_employes');
+}
 }

@@ -15,9 +15,9 @@ return new class extends Migration
         $table->id();
         $table->string('code_projet')->unique();
         $table->string('nom_projet');
-        $table->string('delais_projet');
-        $table->double('budget');
-         $table->double('statut')->nullable();
+        $table->dateTime('date_debut');
+        $table->dateTime('date_cloture');
+        $table->enum('statut', ['En cours', 'Presque terminé', 'Terminé'])->default('En cours');
         $table->text('description')->nullable();
         $table->foreignId('user_id')
               ->constrained('users')

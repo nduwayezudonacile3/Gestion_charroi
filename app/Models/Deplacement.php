@@ -11,6 +11,8 @@ class Deplacement extends Model
 
     protected $fillable = [
         'code_deplacement',
+         'chef_mission',
+        'composantes_mission',
         'date_depart',
         'date_prevus',
         'date_retour',

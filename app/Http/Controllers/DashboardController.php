@@ -24,9 +24,9 @@ class DashboardController extends Controller
         ];
 
         // Statistiques projets par statut
-        $projetsStatuts = Projet::select('statut', DB::raw('count(*) as total'))
-            ->groupBy('statut')
-            ->pluck('total', 'statut'); // clé = statut, valeur = total
+        $projetsStatuts = Projet::select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status'); // clé = status, valeur = total
 
         // Derniers employés
         $dernierEmployes = Employe::latest()->take(5)->get();

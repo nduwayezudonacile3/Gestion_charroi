@@ -6,6 +6,19 @@
 <input type="hidden" name="code_deplacement" value="{{ $deplacement->code_deplacement }} ">
 
 <div class="mb-3">
+    <label for="chef_mission" class="form-label">chef mission</label>
+    <input type="text" name="chef_mission" class="form-control"
+        value="{{ old('chef_mission', $deplacement->chef_mission ?? '') }}" required>
+
+</div>
+
+<div class="mb-3">
+    <label for="composantes_mission" class="form-label">composantes mission</label>
+    <input type="text" name="composantes_mission" class="form-control"
+        value="{{ old('composantes_mission', $deplacement->composantes_mission ?? '') }}" required>
+</div>
+
+<div class="mb-3">
     <label for="date_depart" class="form-label">Date départ</label>
     <input type="datetime-local" name="date_depart" class="form-control"
         value="{{ old('date_depart', isset($deplacement) && $deplacement->date_depart ? date('Y-m-d\TH:i', strtotime($deplacement->date_depart)) : '') }}"
@@ -41,12 +54,6 @@
     <label for="motif" class="form-label">Motif</label>
     <input type="text" name="motif" class="form-control" value="{{ old('motif', $deplacement->motif ?? '') }}"
         required>
-</div>
-
-<div class="mb-3">
-    <label for="frais_mission" class="form-label">Frais mission</label>
-    <input type="number" step="0.01" name="frais_mission" class="form-control"
-        value="{{ old('frais_mission', $deplacement->frais_mission ?? 0) }}">
 </div>
 
 <div class="mb-3">
@@ -98,7 +105,7 @@
 </div>
 
 <div class="mb-3">
-    <label for="employe_ids" class="form-label">Employés</label>
+    <label for="employe_ids" class="form-label"> CHAUFFEURS</label>
     <select name="employe_ids[]" class="form-control" multiple required>
         @foreach ($employes as $employe)
             <option value="{{ $employe->id }}"

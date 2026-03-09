@@ -13,25 +13,25 @@
 </div>
 
 <div class="mb-3">
-    <label for="delais_projet" class="form-label">Delais projet</label>
-    <input type="text" name="delais_projet" class="form-control"
-        value="{{ old('delais_projet', $projet->delais_projet ?? '') }}" required>
+    <label for="date_debut" class="form-label">Date debut</label>
+    <input type="datetime-local" name="date_debut" class="form-control"
+        value="{{ old('date_debut', $projet->date_debut ?? '') }}" required>
 </div>
-
 <div class="mb-3">
-    <label for="budget" class="form-label">Budget</label>
-    <input type="number" step="0.01" name="budget" class="form-control"
-        value="{{ old('budget', $projet->budget ?? '') }}" required>
+    <label for="date_cloture" class="form-label">Date cloture</label>
+    <input type="datetime-local" name="date_cloture" class="form-control"
+        value="{{ old('date_cloture', $projet->date_debut ?? '') }}" required>
+
 </div>
 
 <div class="mb-3">
     <label for="statut" class="form-label">Statut</label>
-    <input type="text" name="statut" class="form-control" value="{{ old('statut', $projet->statut ?? '') }}">
+    <span class="badge bg-{{ $projet->statut_color ?? 'secondary' }}">
+        {{ $projet->statut_text ?? 'N/A' }}
+    </span>
 </div>
-
-<div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <textarea name="description" class="form-control">{{ old('description', $projet->description ?? '') }}</textarea>
+<label for="description" class="form-label">Description</label>
+<textarea name="description" class="form-control">{{ old('description', $projet->description ?? '') }}</textarea>
 </div>
 
 <button type="submit" class="btn btn-primary">

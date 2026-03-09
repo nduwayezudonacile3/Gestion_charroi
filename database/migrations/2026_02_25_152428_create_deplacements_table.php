@@ -12,7 +12,8 @@ return new class extends Migration
     Schema::create('deplacements', function (Blueprint $table) {
         $table->id();
         $table->string('code_deplacement')->unique();
-
+        $table->string('chef_mission');
+        $table->string('composantes_mission');
         $table->dateTime('date_depart');
         $table->dateTime('date_prevus');
         $table->dateTime('date_retour')->nullable();
@@ -26,7 +27,6 @@ return new class extends Migration
         $table->integer('carburant_consomme')->nullable();
 
         $table->string('motif');
-        $table->double('frais_mission')->default(0);
 
         $table->enum('status', [
             'En attente',
@@ -47,9 +47,8 @@ return new class extends Migration
               ->constrained('projets')
               ->onDelete('cascade');
 
-        $table->foreignId('employe_id')
-              ->constrained('employes')
-              ->onDelete('cascade');
+             $table->dropForeign(['employe_id']);
+            $table->dropColumn('employe_id');
 
         $table->foreignId('approved_by')
               ->nullable()
@@ -60,12 +59,12 @@ return new class extends Migration
 
         $table->timestamps();
     });
-}
 
+    }
 
-
-    public function down(): void
-    {
-        Schema::dropIfExists('deplacements');
+    public function down()
+    {    Schema::table('deplacements', function (Blueprint $table) {
+            $table->foreignId('employe_id')->constrained('employes');
+        });
     }
 };
